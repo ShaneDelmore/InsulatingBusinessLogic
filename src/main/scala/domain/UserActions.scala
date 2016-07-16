@@ -2,7 +2,8 @@ package domain
 
 import java.time.Duration
 
-import cats.Monad._
+import cats.implicits._ //This works
+//import cats.syntax.flatMap._ //This does not
 import repos._
 
 trait UserActions[F[_]] { this: UserRepo[F] =>
