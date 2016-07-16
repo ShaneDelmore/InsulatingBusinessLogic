@@ -1,14 +1,7 @@
 package repos
 
-import java.time.Instant
-
+import domain._
 import cats.Monad
-
-case class TokenLifetime(createdAt: Instant, expiresAt: Instant)
-case class Notification(message: String)
-case class AuthToken(value: String, lifetime: TokenLifetime)
-case class Credentials(username: String, password: String)
-case class User(username: String)
 
 trait UserRepo[F[_]] {
   implicit def F: Monad[F]
