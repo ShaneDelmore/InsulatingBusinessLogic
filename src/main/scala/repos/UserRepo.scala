@@ -1,5 +1,6 @@
 package repos
 
+import language.higherKinds
 import domain._
 import cats.Monad
 

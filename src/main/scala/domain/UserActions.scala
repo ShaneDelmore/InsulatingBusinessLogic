@@ -2,10 +2,8 @@ package domain
 
 import java.time.{Duration, Instant}
 
+import language.higherKinds
 import cats.implicits._
-//I could import specific methods only if I wanted
-//import cats.syntax.flatMap._
-//import cats.syntax.functor._
 import repos._
 
 case class TokenLifetime(createdAt: Instant, expiresAt: Instant)
