@@ -2,11 +2,13 @@ package domain
 
 import java.time.Duration
 
-import org.scalatest.{AsyncFunSpec, FunSpec, Matchers}
+import org.scalatest.{Assertion, AsyncFunSpec, FunSpec, Matchers}
 import repos._
 import StubValues._
-import cats.data.Xor
+import XorT_Types.UserMessageOrT
+import cats.data.{Xor, XorT}
 import cats.implicits._
+import repos.XorTypes.UserMessageOr
 
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -27,7 +29,7 @@ class UserActionsSpec
     }
 
     it("works with Xor") {
-      val subject = new XorRepo with UserActions[XorTypes.UserMessageOr]
+      val subject = new XorRepo with UserActions[UserMessageOr]
       subject.service.login(testCredentials, ttl).map{
         result => result shouldBe (stubToken, stubNotifications)
       }
@@ -46,6 +48,8 @@ class UserActionsAsyncSpec
   extends AsyncFunSpec
     with Matchers
 {
+  import EnrichedXorT._
+
   val testCredentials = Credentials("Sunny", "topSecret")
   val ttl = Duration.ofDays(14L)
 
@@ -58,13 +62,18 @@ class UserActionsAsyncSpec
     }
 
     it("works with FutureXor") {
-      val subject = new FutureXorRepo with UserActions[XorT_Types.UserMessageOrT]
-      //Slight tweak here only because I do not have a matcher for XorT in AsyncFunSpec
-      subject.service.login(testCredentials, ttl).value.map{
-        result => result shouldBe Xor.Right(stubToken, stubNotifications)
+      val subject = new FutureXorRepo with UserActions[UserMessageOrT]
+      subject.service.login(testCredentials, ttl).map{
+        result => result shouldBe (stubToken, stubNotifications)
       }
     }
   }
 
+  object EnrichedXorT {
+    //Super hacky workaround for the fact that ScalaTest wants a Future[Assertion], not an XorT[Monad, A, Assertion]
+    implicit def XorTtoFuture(xorT: UserMessageOrT[Assertion]): Future[Assertion] = {
+      xorT.leftMap(_ => org.scalatest.Assertions.fail("Left side found")).merge
+    }
+  }
 
 }
