@@ -33,6 +33,12 @@ class UserActionsSpec
       }
     }
 
+    it("works with XorT") {
+      val subject = new IdXorRepo with UserActions[XorT_Id_Types.UserMessageOrT]
+      subject.service.login(testCredentials, ttl).map{
+        result => result shouldBe (stubToken, stubNotifications)
+      }
+    }
   }
 }
 
