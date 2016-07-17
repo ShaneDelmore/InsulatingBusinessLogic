@@ -10,21 +10,18 @@ import scala.concurrent.ExecutionContext
 
 
 class FutureXorRepo(implicit ec: ExecutionContext) extends UserRepo[UserMessageOrTFuture] {
-  override val F = implicitly[Monad[UserMessageOrTFuture]]
-  override val repo: Repo = new FutureXorRepo {}
+  override val evidence = implicitly[Monad[UserMessageOrTFuture]]
 
-  trait FutureXorRepo extends Repo {
-    def validatedTokenLifetime: UserMessageOrTFuture[TokenLifetime] =
-      XorT.fromXor(Xor.Right(stubLifetime))
+  def validatedTokenLifetime: UserMessageOrTFuture[TokenLifetime] =
+    XorT.fromXor(Xor.Right(stubLifetime))
 
-    def loginUser(creds: Credentials, lifetime: TokenLifetime): UserMessageOrTFuture[AuthToken] =
-      XorT.fromXor(Xor.Right(stubToken))
+  def loginUser(creds: Credentials, lifetime: TokenLifetime): UserMessageOrTFuture[AuthToken] =
+    XorT.fromXor(Xor.Right(stubToken))
 
-    def findUser(token: AuthToken): UserMessageOrTFuture[User] =
-      XorT.fromXor(Xor.Right(stubUser))
+  def findUser(token: AuthToken): UserMessageOrTFuture[User] =
+    XorT.fromXor(Xor.Right(stubUser))
 
-    def getUserNotifications(user: User): UserMessageOrTFuture[List[Notification]] =
-      XorT.fromXor(Xor.Right(stubNotifications))
-  }
+  def getUserNotifications(user: User): UserMessageOrTFuture[List[Notification]] =
+    XorT.fromXor(Xor.Right(stubNotifications))
 }
 

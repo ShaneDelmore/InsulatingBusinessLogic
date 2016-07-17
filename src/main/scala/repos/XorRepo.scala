@@ -13,21 +13,18 @@ object XorTypes {
 import XorTypes.UserMessageOr
 
 class XorRepo extends UserRepo[UserMessageOr] {
-  override val F = implicitly[Monad[UserMessageOr]]
-  override val repo: Repo = new XorRepo {}
+  override val evidence = implicitly[Monad[UserMessageOr]]
 
-  trait XorRepo extends Repo {
-    def validatedTokenLifetime: UserMessageOr[TokenLifetime] =
-      Xor.Right(stubLifetime)
+  def validatedTokenLifetime: UserMessageOr[TokenLifetime] =
+    Xor.Right(stubLifetime)
 
-    def loginUser(creds: Credentials, lifetime: TokenLifetime): UserMessageOr[AuthToken] =
-      Xor.Right(stubToken)
+  def loginUser(creds: Credentials, lifetime: TokenLifetime): UserMessageOr[AuthToken] =
+    Xor.Right(stubToken)
 
-    def findUser(token: AuthToken): UserMessageOr[User] =
-      Xor.Right(stubUser)
+  def findUser(token: AuthToken): UserMessageOr[User] =
+    Xor.Right(stubUser)
 
-    def getUserNotifications(user: User): UserMessageOr[List[Notification]] =
-      Xor.Right(stubNotifications)
-  }
+  def getUserNotifications(user: User): UserMessageOr[List[Notification]] =
+    Xor.Right(stubNotifications)
 }
 

@@ -20,35 +20,35 @@ class UserActionsSpec extends AsyncSpec
 
   describe("UserActions") {
       it("works with options") {
-        val service = (new OptionalRepo with UserActions[Option]).service
+        val service = (new OptionalRepo with UserActions[Option])
         service.login(testCredentials, ttl).map(result =>
           result shouldBe (stubToken, stubNotifications)
         )
       }
 
     it("works with Xor") {
-      val service = (new XorRepo with UserActions[UserMessageOr]).service
+      val service = (new XorRepo with UserActions[UserMessageOr])
       service.login(testCredentials, ttl).map(result =>
         result shouldBe (stubToken, stubNotifications)
       )
     }
 
     it("works with XorT") {
-      val service = (new IdXorRepo with UserActions[XorTAliases.UserMessageOrTId]).service
+      val service = (new IdXorRepo with UserActions[XorTAliases.UserMessageOrTId])
       service.login(testCredentials, ttl).map(result =>
         result shouldBe (stubToken, stubNotifications)
       )
     }
 
     it("works with Future") {
-      val service = (new FutureRepo with UserActions[Future]).service
+      val service = (new FutureRepo with UserActions[Future])
       service.login(testCredentials, ttl).map(result =>
         result shouldBe (stubToken, stubNotifications)
       )
     }
 
     it("works with FutureXor") {
-      val service = (new FutureXorRepo with UserActions[UserMessageOrTFuture]).service
+      val service = (new FutureXorRepo with UserActions[UserMessageOrTFuture])
       service.login(testCredentials, ttl).map(result =>
         result shouldBe (stubToken, stubNotifications)
       )

@@ -6,21 +6,18 @@ import cats.implicits._
 import domain.StubValues._
 
 class OptionalRepo extends UserRepo[Option] {
-  override val F = implicitly[Monad[Option]]
-  override val repo: Repo = new OptionalRepo {}
+  override val evidence = implicitly[Monad[Option]]
 
-  trait OptionalRepo extends Repo {
-    def validatedTokenLifetime: Option[TokenLifetime] =
-      Option(stubLifetime)
+  def validatedTokenLifetime: Option[TokenLifetime] =
+    Option(stubLifetime)
 
-    def loginUser(creds: Credentials, lifetime: TokenLifetime): Option[AuthToken] =
-      Option(stubToken)
+  def loginUser(creds: Credentials, lifetime: TokenLifetime): Option[AuthToken] =
+    Option(stubToken)
 
-    def findUser(token: AuthToken): Option[User] =
-      Option(stubUser)
+  def findUser(token: AuthToken): Option[User] =
+    Option(stubUser)
 
-    def getUserNotifications(user: User): Option[List[Notification]] =
-      Option(stubNotifications)
-  }
+  def getUserNotifications(user: User): Option[List[Notification]] =
+    Option(stubNotifications)
 }
 
